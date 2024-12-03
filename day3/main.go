@@ -11,7 +11,7 @@ func main() {
 	lines, close := util.ReadFile("day3/input.txt")
 	close()
 
-	rx := regexp.MustCompile(`don't\(\)|do\(\)|mul\((\d+),(\d+)\)`)
+	rx := regexp.MustCompile(`don't\(\)|do\(\)|mul\((\d{1,3}),(\d{1,3})\)`)
 	sum1 := 0
 	sum2 := 0
 	line := ""
