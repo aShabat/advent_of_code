@@ -6,8 +6,8 @@ import (
 )
 
 func main() {
-	lines, close := util.ReadFile("day4/input.txt")
-	close()
+	lines := util.ReadFile("day4/input.txt")
+
 	out1 := 0
 	out2 := 0
 	for x := range lines {

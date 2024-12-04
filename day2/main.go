@@ -8,8 +8,7 @@ import (
 )
 
 func main() {
-	lines, close := util.ReadFile("day2/input.txt")
-	close()
+	lines := util.ReadFile("day2/input.txt")
 	countSafe1 := 0
 	countSafe2 := 0
 	for _, line := range lines {

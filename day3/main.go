@@ -8,8 +8,7 @@ import (
 )
 
 func main() {
-	lines, close := util.ReadFile("day3/input.txt")
-	close()
+	lines := util.ReadFile("day3/input.txt")
 
 	rx := regexp.MustCompile(`don't\(\)|do\(\)|mul\((\d{1,3}),(\d{1,3})\)`)
 	sum1 := 0
