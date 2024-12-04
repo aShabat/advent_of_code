@@ -62,6 +62,5 @@ func check2(l []string, x, y int) bool {
 	if !(l[x-1][y+1] == 'M' && l[x+1][y-1] == 'S') && !(l[x-1][y+1] == 'S' && l[x+1][y-1] == 'M') {
 		return false
 	}
-	fmt.Println(x, y)
 	return true
 }
