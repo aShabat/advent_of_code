@@ -32,7 +32,7 @@ var directions = [][]int{
 }
 
 func countTrailHeadsHelper(nums [][]int, visited [][]bool, row, col int) int {
-	if !inBounds(nums, row, col) || visited[row][col] {
+	if !util.InBounds(nums, row, col) || visited[row][col] {
 		return 0
 	}
 	visited[row][col] = true
@@ -41,7 +41,7 @@ func countTrailHeadsHelper(nums [][]int, visited [][]bool, row, col int) int {
 	}
 	count := 0
 	for _, direction := range directions {
-		if inBounds(nums, row+direction[0], col+direction[1]) && nums[row][col]+1 == nums[row+direction[0]][col+direction[1]] {
+		if util.InBounds(nums, row+direction[0], col+direction[1]) && nums[row][col]+1 == nums[row+direction[0]][col+direction[1]] {
 			count += countTrailHeadsHelper(nums, visited, row+direction[0], col+direction[1])
 		}
 	}
@@ -49,7 +49,7 @@ func countTrailHeadsHelper(nums [][]int, visited [][]bool, row, col int) int {
 }
 
 func countTrailHeads(nums [][]int, row, col int) int {
-	if !inBounds(nums, row, col) || nums[row][col] != 0 {
+	if !util.InBounds(nums, row, col) || nums[row][col] != 0 {
 		return 0
 	}
 	visited := make([][]bool, len(nums))
@@ -60,7 +60,7 @@ func countTrailHeads(nums [][]int, row, col int) int {
 }
 
 func rateTrailHeads(nums [][]int, row, col int) int {
-	if !inBounds(nums, row, col) {
+	if !util.InBounds(nums, row, col) {
 		return 0
 	}
 	if nums[row][col] == 9 {
@@ -68,13 +68,9 @@ func rateTrailHeads(nums [][]int, row, col int) int {
 	}
 	count := 0
 	for _, direction := range directions {
-		if inBounds(nums, row+direction[0], col+direction[1]) && nums[row][col]+1 == nums[row+direction[0]][col+direction[1]] {
+		if util.InBounds(nums, row+direction[0], col+direction[1]) && nums[row][col]+1 == nums[row+direction[0]][col+direction[1]] {
 			count += rateTrailHeads(nums, row+direction[0], col+direction[1])
 		}
 	}
 	return count
-}
-
-func inBounds(nums [][]int, row, col int) bool {
-	return row >= 0 && row < len(nums) && col >= 0 && col < len(nums[row])
 }
