@@ -9,11 +9,11 @@ func main() {
 	lines := util.ReadFile("day11/input.txt")
 	nums := util.Split(lines[0], " ")
 
-	muliBlinkCount := multiBlinkCountGen()
+	multiBlinkCount := multiBlinkCountGen()
 	out1, out2 := 0, 0
 	for _, num := range nums {
-		out1 += muliBlinkCount(num, 25)
-		out2 += muliBlinkCount(num, 75)
+		out1 += multiBlinkCount(num, 25)
+		out2 += multiBlinkCount(num, 75)
 	}
 	fmt.Println(out1, out2)
 }
