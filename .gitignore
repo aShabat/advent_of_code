@@ -1,2 +1,5 @@
 input.txt
 2025_clojure/static
+.clj-kondo/.cache/v1
+.lsp/.cache
+2025_clojure/.nrepl-port

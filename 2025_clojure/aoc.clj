@@ -2,6 +2,7 @@
   (:require [clojure.string :refer [upper-case]]
             [clojure.java.shell :refer [sh]]))
 
+(def aoc-session "53616c7465645f5f009a193d45549a164835a9d33341fd84a2923f27294073dfb82735276f3a6e50b46478366b73999f20a83f31c0e5303ddb280b96bdc7e658")
 (def http-client (java.net.http.HttpClient/newHttpClient))
 
 (defn http-request
@@ -13,6 +14,7 @@
      (-> (java.net.http.HttpRequest/newBuilder)
          (.uri (java.net.URI. url))
          (.method (upper-case method) body-object)
+         (.header "Cookie" (str "session=" aoc-session))
          (.build))))
   ([url method body & headers]
    (let [body-object (if (nil? body)
@@ -30,13 +32,14 @@
   (let [response (.send http-client request (java.net.http.HttpResponse$BodyHandlers/ofString))]
     {:body (.body response) :status (.statusCode response)}))
 
-(defn aoc-url [& args] (apply str "https://adventofcode.com" (map #(str "/" %) args)))
+(defn aoc-request [method body & args]
+  (let [aoc-url (apply str "https://adventofcode.com" (map #(str "/" %) args))]
+    (http-request aoc-url method body)))
 
 (defn html-extract-main [html] (get (re-find #"(?s)<main>(.*)</main>" html) 1))
 
 (defn aoc-get-exercise-html [year day]
-  (let [url (aoc-url year "day" day)
-        request (http-request url "get" nil)
+  (let [request (aoc-request "get" nil year "day" day)
         response (http-send request)]
     (html-extract-main (:body response))))
 
@@ -48,4 +51,4 @@
     (spit  (str file ".html") html)
     (convert-file file ".html" ".md")))
 
-(aoc-get-exercise 2024 1)
+(aoc-get-exercise 2021 1)
