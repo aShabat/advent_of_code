@@ -15,16 +15,7 @@
          (.uri (java.net.URI. url))
          (.method (upper-case method) body-object)
          (.header "Cookie" (str "session=" aoc-session))
-         (.build))))
-  ([url method body & headers]
-   (let [body-object (if (nil? body)
-                       (java.net.http.HttpRequest$BodyPublishers/noBody)
-                       (java.net.http.HttpRequest$BodyPublishers/ofString body))]
-     (prn body-object)
-     (-> (java.net.http.HttpRequest/newBuilder)
-         (.uri (java.net.URI. url))
-         (.method method body-object)
-         (.headers (into-array headers))
+         (.header "User-Agent" "https://github.com/aShabat/advent_of_code/blob/main/2025_clojure/aoc.clj")
          (.build)))))
 
 (defn http-send
@@ -51,4 +42,11 @@
     (spit  (str file ".html") html)
     (convert-file file ".html" ".md")))
 
-(aoc-get-exercise 2021 1)
+(defn aoc-get-input [year day]
+  (let [request (aoc-request "get" nil year "day" day "input")
+        response (http-send request)
+
+        file (str "static/" day ".input")]
+    (spit file (:body response))))
+
+(aoc-get-input 2021 1)
