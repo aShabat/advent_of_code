@@ -1,7 +1,8 @@
 #!/usr/bin/clj -M
 (ns aoc
   (:require [clojure.string :refer [upper-case]]
-            [clojure.java.shell :refer [sh]]))
+            [clojure.java.shell :refer [sh]]
+            [clojure.java.io :refer [file]]))
 
 (defn echo [x] (prn (str "ECHO: " x)) x)
 
@@ -32,6 +33,10 @@
 
 (defn html-extract-main [html] (get (re-find #"(?s)<main>(.*)</main>" html) 1))
 
+(defn dir-exists? [path]
+  (let [f (file path)]
+    (when-not (.isDirectory f) (.mkdirs f))))
+
 (defn aoc-get-exercise-html [year day]
   (let [request (aoc-request "get" nil year "day" day)
         response (http-send request)]
@@ -41,7 +46,9 @@
 
 (defn aoc-get-exercise [year day]
   (let [html (aoc-get-exercise-html year day)
-        file (str "static/" day)]
+        dir (str "static/" day)
+        file (str dir "/exercise")]
+    (dir-exists? dir)
     (spit  (str file ".html") html)
     (convert-file file ".html" ".md")))
 
@@ -61,7 +68,9 @@
 (defn aoc-get-input [year day]
   (let [request (aoc-request "get" nil year "day" day "input")
         response (http-send request)
-        file (str "static/" day ".input")]
+        dir (str "static/" day)
+        file (str dir "/input.txt")]
+    (dir-exists? dir)
     (spit file (:body response))))
 
 (let [command (first *command-line-args*)]
