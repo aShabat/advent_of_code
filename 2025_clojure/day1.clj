@@ -1,9 +1,8 @@
-(ns aoc-2025-1
-  (:require [clojure.string :refer [split]]
-            [clojure.math :refer [floor ceil]]))
+(ns day1
+  (:require [clojure.math :refer [floor ceil]]))
 (load-file "util.clj")
 
-(def test-input "L68
+(def test-input (util/lines "L68
 L30
 R48
 L5
@@ -12,9 +11,9 @@ L55
 L1
 L99
 R14
-L82")
+L82"))
 
-(def input (slurp "./static/1/input.txt"))
+(def input (util/lines (slurp "./static/1/input.txt")))
 
 (defn parse-command [command]
   (let [matches (re-find #"(.)(\d+)" command)
@@ -30,7 +29,7 @@ L82")
     [end (if (= end 0) (inc count) count)]))
 
 (defn solve-1 [input]
-  (let [commands (map parse-command (split input #"\n"))
+  (let [commands (map parse-command input)
         start 50] (get  (reduce reducer-1 [start 0] commands) 1)))
 
 (util/aoc-send-answer 2025 1 1 (solve-1 input))
@@ -48,7 +47,7 @@ L82")
   (let [[end add-count] (rotate-count-0 start command)] [end (+ count add-count)]))
 
 (defn solve-2 [input]
-  (let [commands (map parse-command (clojure.string/split input #"\n"))
+  (let [commands (map parse-command input)
         start 50
         end (reduce reducer-2 [start 0] commands)]
     (get end 1)))
