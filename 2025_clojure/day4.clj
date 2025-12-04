@@ -1,4 +1,5 @@
-(ns day4)
+(ns day4
+  (:require [clojure.set :refer [union]]))
 (load-file "util.clj")
 
 (def test-input
@@ -51,23 +52,29 @@
 (util/aoc-send-answer 4 1 (part-1 real-input))
 
 (defn remove-all-papers
-  ([grid positions-to-check skipped-positions]
+  ([grid positions-to-check count-removed]
    (if (empty? positions-to-check)
-     grid
+     count-removed
      (let [position (first positions-to-check)]
-       (cond (not (get-in grid position))
-             (recur grid (rest positions-to-check) skipped-positions)
-             (access? position grid) (recur (assoc-in grid position false)
+       (cond (zero? (get-in grid position))
+             (recur grid (rest positions-to-check) count-removed)
+             (access? position grid) (recur (assoc-in grid position 0)
                                             (concat (rest positions-to-check)
-                                                    skipped-positions)
-                                            '())
-             :else (recur grid
-                          (rest positions-to-check)
-                          (cons position skipped-positions))))))
+                                                    (neighbours position))
+                                            (inc count-removed))
+             :else (recur grid (rest positions-to-check) count-removed)))))
   ([grid]
    (remove-all-papers grid
                       (util/cartesian (range (count grid))
                                       (range (count (grid 0))))
-                      '())))
+                      0)))
 
+(defn part-2
+  [input]
+  (->> input
+       (parse-input)
+       (remove-all-papers)))
 
+(part-2 test-input) ;should be equal 43
+
+(util/aoc-send-answer 4 2 (part-2 real-input))
