@@ -96,3 +96,11 @@
 (defn lines [input] (split input #"\n"))
 
 (defmacro defnm [name params & body] `(def ~name (memoize (fn ~params ~@body))))
+
+(defn cartesian
+  ([] '())
+  ([x] (map list x))
+  ([x & ys]
+   (for [element-x x
+         element-y (apply cartesian ys)]
+     (cons element-x element-y))))
