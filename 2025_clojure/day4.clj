@@ -56,7 +56,7 @@
    (if (empty? positions-to-check)
      count-removed
      (let [position (first positions-to-check)]
-       (cond (zero? (get-in grid position))
+       (cond (zero? (get-in grid position 0))
              (recur grid (rest positions-to-check) count-removed)
              (access? position grid) (recur (assoc-in grid position 0)
                                             (concat (rest positions-to-check)
