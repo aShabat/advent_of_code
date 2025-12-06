@@ -6,7 +6,7 @@
 (defn echo [x] (prn (str "ECHO: " x)) x)
 
 (def aoc-session
-  "53616c7465645f5f009a193d45549a164835a9d33341fd84a2923f27294073dfb82735276f3a6e50b46478366b73999f20a83f31c0e5303ddb280b96bdc7e658")
+  "53616c7465645f5f03a5fb622566637eec99981758671569dbd68fac67fe178c1a2f68f93f63176d89cfc6770c6acce2260addfb6f5143d1a2c33d24adb9e5c8")
 (def year 2025)
 (def http-client (java.net.http.HttpClient/newHttpClient))
 
