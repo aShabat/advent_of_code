@@ -31,56 +31,54 @@
   [input]
   (->> input
        util/lines
-       (keep-indexed (fn [index line]
-                       {:coordinates (map parse-long (split line #",")),
-                        :parent index,
-                        :connections #{}}))
+       (keep-indexed (fn [index line] (map parse-long (split line #","))))
        vec))
-(def test-state (parse-input test-input))
 
 (defn dist [left right] (sqrt (reduce + (map (comp #(pow % 2) -) left right))))
 
 (defn pairs [n] (mapcat (fn [k] (map #(list % k) (range k))) (range n)))
 
-(defn light-connect
-  [lights [left right]]
-  (-> lights
-      (update-in [left :connections] conj right)
-      (update-in [right :connections] conj left)))
+(defn find-cirquit [cirquits index] (first (filter #(% index) cirquits)))
 
-(defn lights-groups
-  ([lights]
-   (reduce (fn [[seen groups] index]
-             (if-not (seen index)
-               (let [[seen group] (lights-groups lights index seen)]
-                 [seen (conj groups group)])
-               [seen groups]))
-           [#{} []]
-           (range (count lights))))
-  ([lights index seen]
-   (if (seen index)
-     [seen #{}]
-     (let [seen (conj seen index)]
-       (reduce (fn [[seen group] index']
-                 (let [[seen group'] (lights-groups lights index' seen)]
-                   [seen (into group group')]))
-               [seen #{index}]
-               (get-in lights [index :connections]))))))
+(defn connect
+  [cirquits [left right]]
+  (let [left-cirquit (find-cirquit cirquits left)
+        right-cirquit (find-cirquit cirquits right)]
+    (if (= left-cirquit right-cirquit)
+      cirquits
+      (conj (disj cirquits left-cirquit right-cirquit)
+            (into left-cirquit right-cirquit)))))
 
 (defn part-1
   [input connections]
   (let [lights (parse-input input)
         queue (->> (count lights)
                    pairs
-                   (sort-by #(apply dist (map (comp :coordinates lights) %))))
-        lights (reduce light-connect lights (take connections queue))]
-    (->> (lights-groups lights)
-         (second)
+                   (sort-by #(apply dist (map lights %)))
+                   (take connections))
+        cirquits (set (map #(set (list %)) (range (count lights))))]
+    (prn queue)
+    (->> (reduce connect cirquits queue)
          (map count)
          sort
          reverse
          (take 3)
          (reduce *))))
 
-(part-1 test-input 10)
-(util/aoc-send-answer 8 1 (part-1 real-input 1000))
+; (part-1 test-input 10)
+; (util/aoc-send-answer 8 1 (part-1 real-input 1000))
+
+(defn part-2
+  [input]
+  (let [lights (parse-input input)
+        queue (->> (count lights)
+                   pairs
+                   (sort-by #(apply dist (map lights %))))
+        cirquits (set (map #(set (list %)) (range (count lights))))]
+    (reduce (fn [cirquits [left right :as pair]]
+              (let [cirquits (connect cirquits pair)]
+                (if (= 1 (count cirquits))
+                  (reduced (* (first left) (first right)))
+                  cirquits)))
+            cirquits
+            queue)))
