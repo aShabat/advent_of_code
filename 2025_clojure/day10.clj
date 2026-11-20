@@ -50,3 +50,41 @@
        (reduce +)))
 
 ; (util/aoc-send-answer 10 1 (part-1 real-input))
+
+
+(defn press
+  [joltage switch]
+  (reduce (fn [j n] (update j n dec)) (vec joltage) switch))
+
+(def solve-2
+  (memoize
+   (fn [switches joltage]
+     (let [initial-state [joltage switches 0 false]]
+       (loop [[[joltage switches-left presses stopped?] & states']
+              [initial-state]
+              best-presses ##Inf]
+         (cond (nil? joltage) best-presses
+               (every? zero? joltage) (recur states' (min presses best-presses))
+               (some neg? joltage) (recur states' best-presses)
+               (and (every? even? joltage) (not stopped?))
+               (let [presses' (+ presses
+                                 (* 2
+                                    (solve-2 switches (map #(/ % 2) joltage))))]
+                 (recur (conj states' [joltage switches-left presses true])
+                        (min presses' best-presses)))
+               (seq switches-left)
+               (let [[switch & switches-left'] switches-left
+                     joltage' (press joltage switch)]
+                 (recur (conj states'
+                              [joltage switches-left' presses false]
+                              [joltage' switches-left' (inc presses) false])
+                        best-presses))
+               :default (recur states' best-presses)))))))
+
+(defn part-2
+  [input]
+  (let [data (parse-input input)]
+    (reduce + (map (fn [d] (solve-2 (d :switches) (d :joltage))) data))))
+
+
+(util/aoc-send-answer 10 2 (part-2 real-input))
