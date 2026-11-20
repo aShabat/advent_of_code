@@ -3,3 +3,4 @@ input.txt
 .clj-kondo/.cache/v1
 .lsp/.cache
 2025_clojure/.nrepl-port
+/.session
