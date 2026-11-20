@@ -4,3 +4,4 @@ input.txt
 .lsp/.cache
 2025_clojure/.nrepl-port
 /.session
+/2026_uiua/static

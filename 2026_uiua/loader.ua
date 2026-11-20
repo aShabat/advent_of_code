@@ -1,27 +1,14 @@
-Session ← ↘¯1⍜(&fo "../.session"|&rs∞)
+~ "util.ua" ~ AOC
 
-AOCGet ← (
-  $$ GET _ HTTP/1.1
-  $$ Host: adventofcode.com
-  $$ Connection: close
-  $$ 
-  $$ 
-  ⍜(&tlsc "adventofcode.com:443"|&rs∞˜⊸&w)
+≡(&fmd$"static/_")+1⇡12
+
++1⇡12
+≡(
+  AOC.Get⊸$"/2026/day/_"
+  ⊃(=200AOC.ResponseStatus|AOC.ResponseBody)
+  ⍥(
+    ⊸&p⍜(⊙&fc|&w) ⊙⊸$"static/_/problem.html"
+    &runi {"pandoc" ⊙"-o" $"static/_/problem.html" ⟜$"static/_/problem.md"}
+  )
+  ◌
 )
-
-AOCPost ← (
-  ⊙(⊸⧻)
-  ⊙Session
-  $$ POST _ HTTP/1.1
-  $$ Host: adventofcode.com
-  $$ Connection: close
-  $$ User-Agent: uiua
-  $$ Content-Type: application/x-www-form-urlencoded
-  $$ Cookie: session=_
-  $$ Content-Length: _
-  $$ 
-  $$ _
-  ⍜(&tlsc "adventofcode.com:443"|&rs∞˜⊸&w)
-)
-
-ResponseStatus ← ⋕ ⊙◌◌°$"_ _ _"
