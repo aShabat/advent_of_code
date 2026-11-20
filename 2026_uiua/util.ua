@@ -36,4 +36,6 @@ SendAnswer ← (
   AOC.ResponseStatus AOC.Post⊃($"/2026/day/_/answer"|$"level=_&answer=_"⋅∘)
 )
 
+LoadInput ← ⍜(&fo|&rs∞)$"static/_/input"
+
 ParseRows! ← ⌅(≡(^0°□) ⊜□⊸(↥⊃(≠@\n|≠@\r))|/($"_\n_"∩°□)⍚°^0)
